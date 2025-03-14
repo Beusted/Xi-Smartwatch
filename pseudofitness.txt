@@ -1,0 +1,34 @@
+def idle
+    steps = 0
+    distance = 0
+
+    if acceleromoeter is active in x direction
+        steps += 1
+        distance = steps * 2
+        # assuming average step length is 2ft
+        print(f"your steps: {steps} \n distance: {distance}")
+
+define class active 
+    asteps = 0
+    adistance = 0
+    speeds[]
+    def runstart()
+        timer() # displays timer
+        if accelerometer is active  in x direction
+            steps += 1
+            distance = steps * 2
+            every 5s log speed to speeds[]
+
+    def runend()
+        average speed = 0
+        time = 0
+
+        time = stopwatch result
+        average speed = sum(speeds) / length of speeds[]
+        print ( # include some flavor text
+            average speed
+            distance run
+            time
+            min(speeds)
+            max(speeds)
+        )
