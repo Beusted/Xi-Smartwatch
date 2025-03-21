@@ -8,16 +8,16 @@
 #     steps = 0
 #     distance = 0
 grav = float(input("Input the amount of gravity force felt: ")) # placeholder till accelerometer integration
-time = float(input("Input amount of seconds elapsed: "))
+time = float(input("Input amount of seconds elapsed: ")) # placeholder till accel integra
 
 def idle (grav, time):
-    vel = (grav * 32.2) * time
-    distance = vel * time
-    step = distance / 2 # average step is 2 feet long
-    return step, distance # Unit is in feet
-step, distance = idle(grav, time)
+    vel = (grav * 32.2) * time # calculating velocity in feet per second
+    distance = vel * time # getting distance from velocity and period of time elapsed 
+    step = distance / 2 # getting total steps assuming a step is about 2 feet long 
+    return step, distance # returns units to be printed 
+step, distance = idle(grav, time) # gets the steps and distances and splits them up into seperate varable from a tuple
 
-print(f"Steps: {step} \nDistance: {distance}ft")
+print(f"Steps: {step} \nDistance: {distance}ft") # displays values 
 
 
 #     if acceleromoeter is active in x direction2
