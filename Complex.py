@@ -20,9 +20,22 @@ step, distance = idle(grav, time) # gets the steps and distances and splits them
 print(f"Steps: {step} \nDistance: {distance}ft") # displays values 
 
 
+# If you know the time (t) of the acceleration: Velocity (v) = Acceleration (a) * Time (t). Since acceleration due to gravity is 9.8 m/s², if an object is accelerating at 1g, its velocity change is 9.8 m/s every second. 
+# 1g = 9.8
+# accel = 9.8 * Gs (given)
+# vel = accel * time
+
 #     if acceleromoeter is active in x direction2
-#         steps += 1
-#         distance = steps * 2
+#
+# make adjustments every 5 seconds? second? - figure out optimal time
+# // alterations: calculate velocity using acceleration 
+#                   then calculate distance using velocity
+#                       using gyroscope to catch swing motion for each step
+#         if gyroscope = swing motion:
+#           steps += 1
+#         velocity = v_prev + (acceleration * time_diff)
+#         distance = d_prev + (velocity * time_diff)
+
 #         # assuming average step length is 2ft
 #         print(f"your steps: {steps} \n distance: {distance}")
 
@@ -31,11 +44,21 @@ print(f"Steps: {step} \nDistance: {distance}ft") # displays values
 #     adistance = 0
 #     speeds[]
 #     def runstart()
-#         timer() # displays timer
-#         if accelerometer is active  in x direction
-#             steps += 1
-#             distance = steps * 2
+#         timer() # displays timer + starts timer
+
+#         if accelerometer is active in x direction
+
+# make adjustments every 5 seconds? second? - figure out optimal time
+# // alterations: calculate velocity using acceleration
+#                   then calculate distance using velocity
+#                       using gyroscope to catch swing motion for each step
+#             if gyroscope = swing motion:
+#                 steps += 1
+#             velocity = v_prev + (acceleration * time_diff)
+#             distance = d_prev + (velocity * time_diff)
 #             every 5s log speed to speeds[]
+#             if current_speed > max_speed:
+#                max_speed = current_speed
 
 #     def runend()
 #         average speed = 0
@@ -47,6 +70,5 @@ print(f"Steps: {step} \nDistance: {distance}ft") # displays values
 #             average speed
 #             distance run
 #             time
-#             min(speeds)
 #             max(speeds)
 #         )
