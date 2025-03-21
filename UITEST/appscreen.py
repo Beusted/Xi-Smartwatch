@@ -3,11 +3,11 @@ import sys
 
 pygame.init()
 
-# Screen dimensions (match main.py)
+# screen dimentions
 SCREEN_WIDTH = 320
 SCREEN_HEIGHT = 230
 
-# Fonts and Colors
+# fonts and colors
 font = pygame.font.SysFont(None, 30)
 WHITE = (255, 255, 255)
 GRAY = (180, 180, 180)
@@ -19,29 +19,29 @@ DARK_GRAY = (30, 30, 30)
 BASE = (107, 106, 105)
 LIGHT_GRAY = (217, 217, 217)
 
-# Menu items
+# app names
 menu_items = ["Stopwatch", "Dice", "Fitness Tracker", "Exit"]
 selected_index = 0
 
-# Constants for layout
-item_height = 50  # Height of each container
-spacing = 10  # Space between containers
-visible_items = 3  # How many items fit on screen
+# constants for each item
+item_height = 50
+spacing = 10
+visible_items = 3
 
-# Main function to call from main.py
+# main function, calls to apps
 def run_app_menu(screen):
-    global selected_index  # Allow tracking across calls
+    global selected_index
     clock = pygame.time.Clock()
     running = True
 
     while running:
         screen.fill(BASE)
 
-        # Draw LIGHT_GRAY layer behind containers (increased height for the layer)
+        # light gray layer behind containers
         layer_rect = pygame.Rect(10, 10, SCREEN_WIDTH - 20, SCREEN_HEIGHT - 20)  # Increased height
         pygame.draw.rect(screen, LIGHT_GRAY, layer_rect, border_radius=15)
 
-        # Calculate which items to show (scroll effect)
+        # scroll effect
         start_index = max(0, selected_index - visible_items + 1)
         end_index = min(len(menu_items), start_index + visible_items)
 
@@ -56,14 +56,14 @@ def run_app_menu(screen):
                 pygame.draw.rect(screen, RED, container_rect, border_radius=10)
                 text_color = GOLD
 
-            # Render text
+            # render text
             text = font.render(menu_items[i], True, text_color)
             text_rect = text.get_rect(center=container_rect.center)
             screen.blit(text, text_rect)
 
         pygame.display.flip()
 
-        # Handle events
+        # handels events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -77,6 +77,6 @@ def run_app_menu(screen):
                 elif event.key == pygame.K_RETURN:
                     print(f"Selected: {menu_items[selected_index]}")
                     if menu_items[selected_index] == "Exit":
-                        running = False  # Exit back to home screen
+                        running = False
 
         clock.tick(30)
