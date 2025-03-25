@@ -1,24 +1,22 @@
-# If you know the time (t) of the acceleration: Velocity (v) = Acceleration (a) * Time (t). Since acceleration due to gravity is 9.8 m/s², if an object is accelerating at 1g, its velocity change is 9.8 m/s every second. 
-# 1g = 9.8
-# accel = 9.8 * Gs (given)
-# vel = accel * time
+import time
 
+def idle ():
+    tsteps = 0
+    tdist = 0
+    period = 10 # ten second period
+    
+    while True:
+        grav = float(input("Input the amount of gravity force felt: ")) # placeholder till accelerometer integration
+        
+        vel = (grav * 32.2) * period # calculating velocity in feet per second
+        distance = vel * period # getting distance from velocity and period of time elapsed 
+        step = distance / 2 # getting total steps assuming a step is about 2 feet long 
 
-# def idle
-#     steps = 0
-#     distance = 0
-grav = float(input("Input the amount of gravity force felt: ")) # placeholder till accelerometer integration
-time = float(input("Input amount of seconds elapsed: ")) # placeholder till accel integra
-
-def idle (grav, time):
-    vel = (grav * 32.2) * time # calculating velocity in feet per second
-    distance = vel * time # getting distance from velocity and period of time elapsed 
-    step = distance / 2 # getting total steps assuming a step is about 2 feet long 
-    return step, distance # returns units to be printed 
-step, distance = idle(grav, time) # gets the steps and distances and splits them up into seperate varable from a tuple
-
-print(f"Steps: {step} \nDistance: {distance}ft") # displays values 
-
+        tsteps += step
+        tdist += distance / 5280
+        print(f"\nTotal Steps: {int(tsteps)} \nTotal Distance: {tdist: 0.2f} Miles")
+        time.sleep(period)
+idle()
 
 # If you know the time (t) of the acceleration: Velocity (v) = Acceleration (a) * Time (t). Since acceleration due to gravity is 9.8 m/s², if an object is accelerating at 1g, its velocity change is 9.8 m/s every second. 
 # 1g = 9.8
