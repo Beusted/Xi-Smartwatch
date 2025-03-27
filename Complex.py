@@ -1,6 +1,7 @@
 import time
 import numpy as np
 from collections import deque
+import random
 
 # receive from accelerometer: (accelerometer) 3 m/s^2 for x, y, z axis
 # receive from gyroscope: (angular velocity) 3 degrees/s for x, y, z
@@ -23,23 +24,32 @@ STEP_DELAY = 0.3 # minimum time between steps to ensure they are separate steps
 GYRO_THRESHOLD = 50 # maximum amount of strength to prevent false data
 ACCEL_TO_SPEED = 0.1  # converts acceleration to the speed/velocity (change depending on testing of accelerometer)
 
-def idle ():
-    tsteps = 0
-    tdist = 0
-    period = 10 # ten second period
-    
-    while True:
-        grav = float(input("Input the amount of gravity force felt: ")) # placeholder till accelerometer integration
-        
-        vel = (grav * 32.2) * period # calculating velocity in feet per second
-        distance = vel * period # getting distance from velocity and period of time elapsed 
-        step = distance / 2 # getting total steps assuming a step is about 2 feet long 
+step_count = 0
+distance_traveled = 0.0
+last_step_time = 0
+recent_accel = deque(maxlen=10) # stores recent zaxis acceleration
 
-        tsteps += step
-        tdist += distance / 5280
-        print(f"\nTotal Steps: {int(tsteps)} \nTotal Distance: {tdist: 0.2f} Miles")
-        time.sleep(period)
-idle()
+try:
+    while True:
+        # Read real-time accelerometer and gyroscope data
+        ax, ay, az, gx, gy, gz = get_sensor_data()
+        recent_accel.append(az)
+        smoothed_az = np.mean(recent_accel)
+
+        total_rotation = abs(gx) + abs(gy) + abs(gz) # abs is just absolute value
+        if total_rotation > gyro_threshold:
+            continue  # Skip if too much rotation detected (arm movement or noise)
+        
+        current_time = time.time()
+        if smoothed_az > step_threshold and (current_time - last_step_time) > step_delay:
+            step_count += 1
+            distance_traveled += step_length # estimating distance based on step count
+            last_step_time = current_time
+            print(f"Step detected! Total Steps: {step_count}, Distance: {distance_traveled:.2f} meters")
+
+            time.sleep(0.1)
+except KeyboardInterrupt:
+    print(f"\nIdle mode stopped.\nTotal Steps: {step_count}\nTotal Distance Traveled: {distance_traveled:.2f} meters")
 
 # If you know the time (t) of the acceleration: Velocity (v) = Acceleration (a) * Time (t). Since acceleration due to gravity is 9.8 m/s², if an object is accelerating at 1g, its velocity change is 9.8 m/s every second. 
 # 1g = 9.8
