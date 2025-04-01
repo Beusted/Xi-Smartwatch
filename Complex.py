@@ -2,6 +2,7 @@ import time
 import numpy as np
 from collections import deque
 import random
+import datetime
 
 # receive from accelerometer: (accelerometer) 3 m/s^2 for x, y, z axis
 # receive from gyroscope: (angular velocity) 3 degrees/s for x, y, z
@@ -28,9 +29,17 @@ step_count = 0
 distance_traveled = 0.0
 last_step_time = 0
 recent_accel = deque(maxlen=10) # stores recent zaxis acceleration
+start_time = time.time() # get the start time
+last_reset_date = datetime.date.today()
 
 try:
     while True:
+        current_date = datetiem.date.today()
+        if current_date != last_reset_date
+            print(f"Step detected! Total Steps: {step_count}, Distance: {distance_traveled:.2f} meters")
+            step_count = 0
+            distance_traveled = 0.0
+            last_reset_date = current_date
         # Read real-time accelerometer and gyroscope data
         ax, ay, az, gx, gy, gz = get_sensor_data()
         recent_accel.append(az)
