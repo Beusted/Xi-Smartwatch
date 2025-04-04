@@ -1,5 +1,5 @@
-## Xi-Smartwatch
-# Brought to yo by the Xi Class of Theta Tau
+# Xi-Smartwatch
+## Brought to you by the Xi Class of Theta Tau
 
 The smartwatch is a touch screen device with two simple apps and one complex app.
 
