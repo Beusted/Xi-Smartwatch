@@ -1,7 +1,7 @@
 # Xi-Smartwatch
 ## Brought to you by the Xi Class of Theta Tau
 
-<a href="https://www.instagram.com/csufthetatau/"><img src="https://png.pngtree.com/element_our/sm/20180506/sm_5aeee1ca3107b.jpg" alt="Instagram"/>
+<a href="https://www.instagram.com/csufthetatau/"><img src="https://raw.githubusercontent.com/wle8300/instagram-logo/refs/heads/master/logo.svg" alt="Instagram"/>
 
 The smartwatch is a touch screen device with two simple apps and one complex app.
 
