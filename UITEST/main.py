@@ -1,3 +1,4 @@
+#main.py
 import pygame
 import time
 import datetime
