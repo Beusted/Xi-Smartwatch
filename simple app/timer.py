@@ -1,178 +1,169 @@
 import time
 import pygame
+import sys
 
-# Initialize pygame for keyboard events
+# Initialize pygame
 pygame.init()
-pygame.display.set_mode((100, 100))
+screen = pygame.display.set_mode((360, 480))
 pygame.display.set_caption("Timer & Stopwatch")
+font = pygame.font.SysFont(None, 32)
 
-# Main function for the application
-def main():
-    options = input("Stopwatch     Timer\n\n")  # gives the user options to use stopwatch or timer
-    Enter = True
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GRAY = (200, 200, 200)
+BLUE = (100, 149, 237)
 
-    while Enter:
-        if options == 'Timer':  # if user types in Timer it runs this code under it
-            def format_time(seconds):  # makes it so that the code is readable. HH:MM:SS.ss more presentable
-                hours = int(seconds // 3600)  # divdes the seconds by 3600 because that's how many seconds are in an hour.
-                                          # // is added to remove any decimals
-                minutes = int((seconds % 3600) // 60)  # the % gives you the remainder after dividing by hours then divides
-                                                   # by 60 to get the min.
-                seconds = seconds % 60  # Remaining seconds
-                return f"{hours:02}:{minutes:02}:{seconds:05.2f}"  # Makes sure that we keep hours and minutes to 2 digits
-                                                               # and makes seconds have 2 digits with 2 decimals.
+# Draw text
+def draw_text(text, x, y, center=False):
+    txt_surface = font.render(text, True, BLACK)
+    if center:
+        rect = txt_surface.get_rect(center=(x, y))
+        screen.blit(txt_surface, rect)
+    else:
+        screen.blit(txt_surface, (x, y))
 
-            def countdown_timer(seconds):  # defines our countdown timer by it's seconds
-                print(f"Timer set for {format_time(seconds)}")
-                print("Press P to pause, R to resume, Q to quit")
-                paused = False
-                start_time = time.time()  # prints the message in the format indicated
-                running = True
-                
-                try:
-                    while seconds > 0 and running:  # starts the loop and only ends once the timer in seconds reaches 0
-                        print(f"\rTime left: {format_time(seconds)}", end="")  #\r is used to overwrite the
-                                                                          # previous output to make it look clean
-                                                                          # the end="" prevents automatic new lines
-                        time.sleep(0.01)  # pauses the loop for 0.01 seconds before the time gets updated again
-                        
-                        # Handle pygame events
-                        for event in pygame.event.get():
-                            if event.type == pygame.QUIT:
-                                running = False
-                            elif event.type == pygame.KEYDOWN:
-                                if event.key == pygame.K_p:  # Pause on 'p' key
-                                    print("\nPaused. Press R to resume.")
-                                    paused = True
-                                    while paused and running:
-                                        for event in pygame.event.get():
-                                            if event.type == pygame.QUIT:
-                                                running = False
-                                            elif event.type == pygame.KEYDOWN:
-                                                if event.key == pygame.K_r:  # Resume on 'r' key
-                                                    print("Resumed.")
-                                                    start_time = time.time()
-                                                    paused = False
-                                                elif event.key == pygame.K_q:  # Quit on 'q' key
-                                                    running = False
-                                                    paused = False
-                                        pygame.time.delay(10)  # Small delay to prevent CPU hogging
-                                elif event.key == pygame.K_q:  # Quit on 'q' key
-                                    running = False
-                        
-                        if not paused:
-                            seconds -= 0.01  # decreases by 0.01 in each iteration of the loop
+# Button class
+class Button:
+    def __init__(self, rect, text):
+        self.rect = pygame.Rect(rect)
+        self.text = text
 
-                    if seconds <= 0:
-                        print("\nTime's up!")  # when timer reaches 0 then this prints
-                    else:
-                        print("\nTimer Stopped")
-                        
-                except KeyboardInterrupt:  # lets the code stop smoothly instead of the program crashing
-                    print("\nTimer Stopped")
-                
-                # Ask if user wants to return to main menu
-                print("\nPress M to return to main menu or any other key to exit")
-                waiting_for_input = True
-                while waiting_for_input:
-                    for event in pygame.event.get():
-                        if event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_m:
-                                return True  # Return to main menu
-                            else:
-                                return False  # Exit program
-                    pygame.time.delay(10)  # Small delay to prevent CPU hogging
-            
-            # Get user input for hours, minutes, and seconds
-            hours = int(input("Enter hours: "))
-            minutes = int(input("Enter minutes: "))
-            seconds = float(input("Enter seconds: "))
+    def draw(self):
+        pygame.draw.rect(screen, GRAY, self.rect, border_radius=8)
+        draw_text(self.text, self.rect.centerx, self.rect.centery, center=True)
 
-            total_seconds = (hours * 3600) + (minutes * 60) + seconds  # converts the hours and minutes to seconds and added to seconds
-            return_to_menu = countdown_timer(total_seconds)
-            if return_to_menu:
-                options = input("\nStopwatch     Timer\n\n")  # Show options again
-            else:
-                break  # Exit the program
+    def is_pressed(self, pos):
+        return self.rect.collidepoint(pos)
 
-        elif options == 'Stopwatch':  # if user types in Stopwatch it runs this code under it
-            def format_time(seconds):  # makes it so that the code is readable. HH:MM:SS.ss more presentable
-                hours = int(seconds // 3600)  # divdes the seconds by 3600 because that's how many seconds are in an hour.
-                                          # // is added to remove any decimals
-                minutes = int((seconds % 3600) // 60)  # the % gives you the remainder after dividing by hours then divides
-                                                   # by 60 to get the min.
-                seconds = seconds % 60  # Remaining seconds
-                return f"{hours:02}:{minutes:02}:{seconds:05.2f}"  # Makes sure that we keep hours and minutes to 2 digits
-                                                               # and makes seconds have 2 digits with 2 decimals.
+# Format time to HH:MM:SS
+def format_time(seconds):
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    seconds = int(seconds % 60)
+    return f"{hours:02}:{minutes:02}:{seconds:02}"
 
-            def stopwatch():  # defines the stopwatch function
-                print("Press ENTER to start the stopwatch, P to pause, R to resume, and Q to stop.")
-                input()  # waits for user input
-                print("Stopwatch started...")
-                start_time = time.time()  # keeps track of the current time
-                running = True
-                paused = False
-                paused_time = 0
-                pause_start = 0
+# Main app
+def run_timer_app():
+    mode = None
+    running = False
+    start_time = 0
+    elapsed = 0
+    timer_seconds = 0
 
-                try:
-                    while running:  # lets the code loop until user stops it
-                        # Handle pygame events
-                        for event in pygame.event.get():
-                            if event.type == pygame.QUIT:
-                                running = False
-                            elif event.type == pygame.KEYDOWN:
-                                if event.key == pygame.K_p and not paused:  # Pause on 'p' key
-                                    paused = True
-                                    pause_start = time.time()
-                                    print("\nPaused. Press R to resume.")
-                                elif event.key == pygame.K_r and paused:  # Resume on 'r' key
-                                    paused = False
-                                    paused_time += time.time() - pause_start
-                                    print("\nResumed.")
-                                elif event.key == pygame.K_q:  # Quit on 'q' key
-                                    running = False
-                        
-                        if not paused:
-                            elapsed_time = time.time() - start_time - paused_time  # by subtracting the time to the start time we get the elapsed time
-                                                                      # how much time that has passed
-                            print(f"\rElapsed Time: {format_time(elapsed_time)}", end="")  # prints out the elapsed time in the format
-                                                                                      # of HH:MM:SS.ss. \r is used to overwrite the
-                                                                                      # previous output to make it look clean
-                                                                                      # the end="" prevents automatic new lines
-                        
-                        time.sleep(0.01)  # adds a delay of 0.01 to display smoothly
-                    
-                    print("\nStopwatch stopped.")  # prints out after the keyboard interrupts
-                    print(f"Total time: {format_time(time.time() - start_time - paused_time)}")  # prints the total time in the format
-                    
-                except KeyboardInterrupt:  # lets the code stop smoothly instead of the program crashing
-                    print("\nStopwatch stopped.")
-                    print(f"Total time: {format_time(time.time() - start_time - paused_time)}")
-                
-                # Ask if user wants to return to main menu
-                print("\nPress M to return to main menu or any other key to exit")
-                waiting_for_input = True
-                while waiting_for_input:
-                    for event in pygame.event.get():
-                        if event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_m:
-                                return True  # Return to main menu
-                            else:
-                                return False  # Exit program
-                    pygame.time.delay(10)  # Small delay to prevent CPU hogging
-            
-            return_to_menu = stopwatch()
-            if return_to_menu:
-                options = input("\nStopwatch     Timer\n\n")  # Show options again
-            else:
-                break  # Exit the program
-        
-        else:
-            print("Invalid option. Please enter 'Stopwatch' or 'Timer'.")
-            options = input("\nStopwatch     Timer\n\n")  # gives the user options again
+    # Main buttons
+    timer_btn = Button((50, 20, 120, 40), "Timer")
+    sw_btn = Button((190, 20, 120, 40), "Stopwatch")
+    start_btn = Button((30, 420, 90, 40), "Start")
+    stop_btn = Button((135, 420, 90, 40), "Stop")
+    reset_btn = Button((240, 420, 90, 40), "Reset")
 
-    pygame.quit()  # Clean up pygame when exiting
+    # Increment buttons (top half)
+    inc_h1 = Button((30, 80, 70, 40), "+1h")
+    inc_h5 = Button((30, 130, 70, 40), "+5h")
+    inc_m1 = Button((145, 80, 70, 40), "+1m")
+    inc_m5 = Button((145, 130, 70, 40), "+5m")
+    inc_s1 = Button((260, 80, 70, 40), "+1s")
+    inc_s5 = Button((260, 130, 70, 40), "+5s")
 
-if __name__ == "__main__":
-    main()
+    # Decrement buttons (bottom half)
+    dec_h1 = Button((30, 180, 70, 40), "-1h")
+    dec_h5 = Button((30, 230, 70, 40), "-5h")
+    dec_m1 = Button((145, 180, 70, 40), "-1m")
+    dec_m5 = Button((145, 230, 70, 40), "-5m")
+    dec_s1 = Button((260, 180, 70, 40), "-1s")
+    dec_s5 = Button((260, 230, 70, 40), "-5s")
+
+    while True:
+        screen.fill(WHITE)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = event.pos
+                if timer_btn.is_pressed(pos):
+                    mode = "Timer"
+                    elapsed = 0
+                    timer_seconds = 0
+                    running = False
+                elif sw_btn.is_pressed(pos):
+                    mode = "Stopwatch"
+                    elapsed = 0
+                    running = False
+                elif start_btn.is_pressed(pos):
+                    if not running:
+                        start_time = time.time() - elapsed
+                        running = True
+                elif stop_btn.is_pressed(pos):
+                    if running:
+                        elapsed = time.time() - start_time
+                        running = False
+                elif reset_btn.is_pressed(pos):
+                    running = False
+                    elapsed = 0
+                    if mode == "Timer":
+                        timer_seconds = 0
+
+                if mode == "Timer" and not running:
+                    if inc_h1.is_pressed(pos):
+                        timer_seconds += 3600
+                    elif inc_h5.is_pressed(pos):
+                        timer_seconds += 5 * 3600
+                    elif inc_m1.is_pressed(pos):
+                        timer_seconds += 60
+                    elif inc_m5.is_pressed(pos):
+                        timer_seconds += 5 * 60
+                    elif inc_s1.is_pressed(pos):
+                        timer_seconds += 1
+                    elif inc_s5.is_pressed(pos):
+                        timer_seconds += 5
+                    elif dec_h1.is_pressed(pos):
+                        timer_seconds = max(0, timer_seconds - 3600)
+                    elif dec_h5.is_pressed(pos):
+                        timer_seconds = max(0, timer_seconds - 5 * 3600)
+                    elif dec_m1.is_pressed(pos):
+                        timer_seconds = max(0, timer_seconds - 60)
+                    elif dec_m5.is_pressed(pos):
+                        timer_seconds = max(0, timer_seconds - 5 * 60)
+                    elif dec_s1.is_pressed(pos):
+                        timer_seconds = max(0, timer_seconds - 1)
+                    elif dec_s5.is_pressed(pos):
+                        timer_seconds = max(0, timer_seconds - 5)
+
+        if running:
+            elapsed = time.time() - start_time
+
+        if mode:
+            draw_text(f"Mode: {mode}", 180, 280, center=True)
+            current_time = timer_seconds - elapsed if mode == "Timer" else elapsed
+            current_time = max(0, current_time)
+            draw_text(format_time(current_time), 180, 320, center=True)
+
+        # Draw common buttons
+        timer_btn.draw()
+        sw_btn.draw()
+        start_btn.draw()
+        stop_btn.draw()
+        reset_btn.draw()
+
+        if mode == "Timer" and not running:
+            inc_h1.draw()
+            inc_h5.draw()
+            inc_m1.draw()
+            inc_m5.draw()
+            inc_s1.draw()
+            inc_s5.draw()
+            dec_h1.draw()
+            dec_h5.draw()
+            dec_m1.draw()
+            dec_m5.draw()
+            dec_s1.draw()
+            dec_s5.draw()
+
+        pygame.display.flip()
+        pygame.time.Clock().tick(30)
+
+if __name__ == '__main__':
+    run_timer_app()
