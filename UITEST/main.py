@@ -1,24 +1,23 @@
-#main.py
 import pygame
 import time
 import datetime
 import appscreen
 import timerui
-#import numgen
-#import complexui
+import numgen
+import complexui
 
 pygame.init()
 
 # Screen dimensions
-SCREEN_WIDTH = 320
-SCREEN_HEIGHT = 230
+SCREEN_WIDTH = 480
+SCREEN_HEIGHT = 320
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Xi Smartwatch")
 
 # Fonts
-font_time = pygame.font.SysFont("Rubik", 64)
-font_date = pygame.font.SysFont("Rubik", 20)
-font_button = pygame.font.SysFont("Rubik", 20)
+font_time = pygame.font.SysFont("Rubik", 88)
+font_date = pygame.font.SysFont("Rubik", 38)
+font_button = pygame.font.SysFont("Rubik", 30)
 
 # Colors
 BLACK = (0, 0, 0)
@@ -35,6 +34,7 @@ APP_SCREEN = 1
 STOPWATCH_SCREEN = 2
 DICE_SCREEN = 3
 NUMGEN_SCREEN = 4
+COMPLEX_APP_SCREEN = 5
 current_screen = HOME_SCREEN
 
 # Border settings
@@ -44,10 +44,10 @@ INNER_RADIUS = 15
 PADDING = 10
 
 # Button settings
-button_width = 120
-button_height = 40
+button_width = 180
+button_height = 70
 button_x = (SCREEN_WIDTH - button_width) // 2
-button_y = 160
+button_y = 200
 button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
 
 # Main loop
@@ -63,7 +63,7 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if current_screen == HOME_SCREEN and button_rect.collidepoint(mouse_x, mouse_y):
                 current_screen = APP_SCREEN
-    
+
     # Clear screen
     screen.fill(BASE)
 
@@ -81,16 +81,16 @@ while running:
         time_str = now.strftime("%I:%M")
         date_str = now.strftime("%A, %B %d").lstrip("0").replace(" 0", " ")
 
-        # Render text
+        # Render time and date
         time_surface = font_time.render(time_str, True, GOLD)
-        time_rect = time_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 30))
+        time_rect = time_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 40))
         screen.blit(time_surface, time_rect)
 
         date_surface = font_date.render(date_str, True, GOLD)
         date_rect = date_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 10))
         screen.blit(date_surface, date_rect)
 
-        # Hover effect for Enter button
+        # Hover effect for button
         if button_rect.collidepoint(mouse_x, mouse_y):
             button_color = GOLD
             text_color = RED
@@ -103,7 +103,7 @@ while running:
         button_text_rect = button_text_surface.get_rect(center=button_rect.center)
         screen.blit(button_text_surface, button_text_rect)
     
-    # Switching between screens
+    # App screen menu
     elif current_screen == APP_SCREEN:
         selected_app = appscreen.run_app_menu(screen)
         if selected_app == "stopwatch":
@@ -112,6 +112,8 @@ while running:
             current_screen = DICE_SCREEN
         elif selected_app == "numgen":
             current_screen = NUMGEN_SCREEN
+        elif selected_app == "complex":
+            current_screen = COMPLEX_APP_SCREEN
         else:
             current_screen = HOME_SCREEN
 
@@ -122,6 +124,11 @@ while running:
 
     elif current_screen == NUMGEN_SCREEN:
         back_to_app = numgen.run_random_number_screen(screen)
+        if back_to_app:
+            current_screen = APP_SCREEN
+
+    elif current_screen == COMPLEX_APP_SCREEN:
+        back_to_app = complexui.run_complex_app_screen(screen)
         if back_to_app:
             current_screen = APP_SCREEN
 
