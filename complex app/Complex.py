@@ -1,4 +1,7 @@
 import time
+import json
+import calendar
+import logs
 import numpy as np
 from collections import deque
 import random
@@ -25,6 +28,12 @@ STEP_DELAY = 0.3 # minimum time between steps to ensure they are separate steps
 GYRO_THRESHOLD = 50 # maximum amount of strength to prevent false data
 ACCEL_TO_SPEED = 0.1  # converts acceleration to the speed/velocity (change depending on testing of accelerometer)
 
+# tracking steps across days
+
+step_log = 'steps.dat' # file holding tracked steps over time
+step_data = {} # dictionary to use for reading/writing from/to step log file
+
+
 step_count = 0
 distance_traveled = 0.0
 last_step_time = 0
@@ -34,11 +43,16 @@ last_reset_date = datetime.date.today()
 
 try:
     while True:
-        current_date = datetiem.date.today()
-        if current_date != last_reset_date
+        current_date = datetime.date.today()
+        if current_date != last_reset_date:
+            data_key = current_date
             print(f"Step detected! Total Steps: {step_count}, Distance: {distance_traveled:.2f} meters")
             step_count = 0
             distance_traveled = 0.0
+            step_data[data_key] = {}
+            step_data[data_key]['Total Steps'] = step_count
+            step_data[data_key]['Distance'] = distance_traveled
+            
             last_reset_date = current_date
         # Read real-time accelerometer and gyroscope data
         ax, ay, az, gx, gy, gz = get_sensor_data()

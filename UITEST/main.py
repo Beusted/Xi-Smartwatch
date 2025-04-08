@@ -1,10 +1,11 @@
+#main.py
 import pygame
 import time
 import datetime
 import appscreen
 import timerui
-import numgen
-import complexui
+#import numgen
+#import complexui
 
 pygame.init()
 
