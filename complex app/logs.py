@@ -30,16 +30,24 @@ def report_daily(*, data, date):
 
 def report_weekly(*, data, date):
     weekly = ''
-    days = ''
     total_steps = 0
     total_distance = 0
 
-    for key in data:
-        month = calendar.month_name[int(key[4:6])]
-        #days = (f'{month} {key[6:8]}, {key[0:4]}')
-        #steps = data[key]['Total Steps']
-        #distance = data[key]['Distance']
-        #weekly = weekly + (f'{day:<20} {steps} {distance}')
+    # Convert input date string to datetime object
+    input_date = datetime.strptime(date, '%Y%m%d')
 
-    return(weekly)
+    # Find the Monday of the current week
+    start_of_week = input_date - timedelta(days=input_date.weekday())
+    end_of_week = start_of_week + timedelta(days=6)
+
+    for key in data:
+        current_date = datetime.strptime(key, '%Y%m%d')
+        if start_of_week <= current_date <= end_of_week:
+            total_steps += data[key]['Total Steps']
+            total_distance += data[key]['Distance']
+
+    week_range = f"{start_of_week.strftime('%b %d')} - {end_of_week.strftime('%b %d, %Y')}"
+    weekly += f"Week of {week_range}\nTotal Steps: {total_steps}\nTotal Distance: {total_distance} km\n"
+
+    return weekly
 
