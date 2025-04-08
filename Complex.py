@@ -46,9 +46,7 @@ class Active:
         self.time = 0
         self.velocity = 0
         self.acceleration = 0
-
-def run_time():
-    # recursive fxn that will continously update the values during run time
+    
 # define class active 
 #     asteps = 0
 #     adistance = 0
