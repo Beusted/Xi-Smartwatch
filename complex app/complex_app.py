@@ -92,6 +92,10 @@ except KeyboardInterrupt:
 
 #         # assuming average step length is 2ft
 #         print(f"your steps: {steps} \n distance: {distance}")
+
+
+
+
 class Active:
  # This is the initializer (constructor) for the Active class. It initializes all attributes to zero
     def __init__(self):

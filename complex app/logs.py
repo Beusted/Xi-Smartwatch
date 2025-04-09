@@ -1,5 +1,6 @@
 import json
 import calendar
+from datetime import datetime, timedelta
 
 def read_data(*, filename):
     try:
@@ -15,39 +16,33 @@ def write_data(*, data, filename):
 
 def report_daily(*, data, date):
     daily = ''
-    day = ''
-    steps = 0
-    distance = 0
-
-    for key in data:
+    for key in sorted(data.keys()):
         month = calendar.month_name[int(key[4:6])]
-        day = (f'{month} {key[6:8]}, {key[0:4]}')
+        day = f'{month} {int(key[6:8])}, {key[0:4]}'
         steps = data[key]['Total Steps']
         distance = data[key]['Distance']
-        daily = daily + (f'{day:<20} {steps} {distance}')
+        daily += f'{day:<20} Steps: {steps:<6} Distance: {distance} km\n'
 
-    return(daily)
+    return daily
 
 def report_weekly(*, data, date):
     weekly = ''
     total_steps = 0
-    total_distance = 0
+    total_distance = 0.0
 
-    # Convert input date string to datetime object
     input_date = datetime.strptime(date, '%Y%m%d')
-
-    # Find the Monday of the current week
     start_of_week = input_date - timedelta(days=input_date.weekday())
     end_of_week = start_of_week + timedelta(days=6)
 
-    for key in data:
+    for key in sorted(data.keys()):
         current_date = datetime.strptime(key, '%Y%m%d')
         if start_of_week <= current_date <= end_of_week:
             total_steps += data[key]['Total Steps']
             total_distance += data[key]['Distance']
 
     week_range = f"{start_of_week.strftime('%b %d')} - {end_of_week.strftime('%b %d, %Y')}"
-    weekly += f"Week of {week_range}\nTotal Steps: {total_steps}\nTotal Distance: {total_distance} km\n"
+    weekly += f"Week of {week_range}\nTotal Steps: {total_steps}\nTotal Distance: {total_distance:.2f} km\n"
 
     return weekly
+
 
