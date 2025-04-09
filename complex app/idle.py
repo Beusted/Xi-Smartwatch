@@ -6,6 +6,7 @@ import numpy as np
 from collections import deque
 import random
 import datetime
+import os
 
 # receive from accelerometer: (accelerometer) 3 m/s^2 for x, y, z axis
 # receive from gyroscope: (angular velocity) 3 degrees/s for x, y, z
@@ -31,7 +32,8 @@ step_length = 0.7
 
 # tracking steps across days
 
-step_log = 'steps.json' # file holding tracked steps over time
+# IMPORTANT!!! CHANGE STEP LOG PATH DEPENDING ON DEVICE OR IT WILL NOT WORK
+step_log = '/Users/kaitlynlee/Documents/Xi-Smartwatch/complex app/steps.dat' # file holding tracked steps over time
 step_data = {} # dictionary to use for reading/writing from/to step log file
 
 
@@ -78,4 +80,19 @@ try:
             time.sleep(0.1)
 except KeyboardInterrupt:
     print(f"\nIdle mode stopped.\nTotal Steps: {step_count}\nTotal Distance Traveled: {distance_traveled:.2f} meters")
+    
+    # Save today's data before reporting
+    date_str = datetime.date.today().strftime('%Y%m%d')
+    logs.save_daily_totals(
+        filename=step_log,
+        date=date_str,
+        steps=step_count,
+        distance=distance_traveled / 1000  # Convert meters to km
+    )
+    print(f"Data saved for today: {step_count} steps, {distance_traveled/1000:.2f} km")
+
+    #print("Looking for file:", step_log)
+    #print("File exists:", os.path.exists(step_log))
+
+    print("\n--- Weekly Summary ---")
     print(logs.report_weekly_summary(step_log))
