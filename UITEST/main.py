@@ -32,9 +32,8 @@ LIGHT_GRAY = (217, 217, 217)
 HOME_SCREEN = 0
 APP_SCREEN = 1
 STOPWATCH_SCREEN = 2
-DICE_SCREEN = 3
-NUMGEN_SCREEN = 4
-COMPLEX_APP_SCREEN = 5
+NUMGEN_SCREEN = 3
+COMPLEX_APP_SCREEN = 4
 current_screen = HOME_SCREEN
 
 # Border settings
@@ -50,6 +49,9 @@ button_x = (SCREEN_WIDTH - button_width) // 2
 button_y = 200
 button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
 
+# To prevent multiple screen transitions per click
+transition_in_progress = False
+
 # Main loop
 running = True
 while running:
@@ -60,8 +62,9 @@ while running:
             running = False
         
         # Detect mouse click
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and not transition_in_progress:
             if current_screen == HOME_SCREEN and button_rect.collidepoint(mouse_x, mouse_y):
+                transition_in_progress = True  # Set flag to prevent multiple clicks
                 current_screen = APP_SCREEN
 
     # Clear screen
@@ -102,35 +105,37 @@ while running:
         button_text_surface = font_button.render("ENTER", True, text_color)
         button_text_rect = button_text_surface.get_rect(center=button_rect.center)
         screen.blit(button_text_surface, button_text_rect)
-    
-    # App screen menu
+
     elif current_screen == APP_SCREEN:
         selected_app = appscreen.run_app_menu(screen)
+        transition_in_progress = False
+
         if selected_app == "stopwatch":
             current_screen = STOPWATCH_SCREEN
-        elif selected_app == "dice":
-            current_screen = DICE_SCREEN
-        elif selected_app == "numgen":
+        elif selected_app == "numbergenerator":
             current_screen = NUMGEN_SCREEN
         elif selected_app == "complex":
             current_screen = COMPLEX_APP_SCREEN
-        else:
+        elif selected_app == "clock":
             current_screen = HOME_SCREEN
 
     elif current_screen == STOPWATCH_SCREEN:
         back_to_app = timerui.run_stopwatch_screen(screen)
         if back_to_app:
             current_screen = APP_SCREEN
+            transition_in_progress = True
 
     elif current_screen == NUMGEN_SCREEN:
-        back_to_app = numgen.run_random_number_screen(screen)
-        if back_to_app:
+        back_to_app = numgen.run_num_gen_screen(screen)
+        if back_to_app == "back_to_app":
             current_screen = APP_SCREEN
+            transition_in_progress = True
 
     elif current_screen == COMPLEX_APP_SCREEN:
         back_to_app = complexui.run_complex_app_screen(screen)
         if back_to_app:
             current_screen = APP_SCREEN
+            transition_in_progress = True
 
     pygame.display.update()
     time.sleep(0.1)
