@@ -49,6 +49,20 @@ class Bird(pygame.sprite.Sprite):
             self.image_index = 0
         self.image = bird_images[self.image_index // 10]
 
+        # Gravity and Flap
+        self.vel += 0.5
+        if self.vel > 7:
+            self.vel = 7
+        if self.rect.y < 500:
+            self.rect.y += int(self.vel)
+        if self.vel == 0:
+            self.flap = False
+
+        # User Input
+        if pygame.mouse.get_pressed()[0] and not self.flap and self.rect.y > 0:
+            self.flap = True
+            self.vel = -7
+
 
 class Ground(pygame.sprite.Sprite):
     def __init__(self, x, y):
