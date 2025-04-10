@@ -88,6 +88,8 @@ def run_slider_screen(screen):
                 knob_x = max(slider_x, min(slider_x + slider_width, mx))
 
         screen.fill(BASE)
+        inner_rect = pygame.Rect(PADDING, PADDING, SCREEN_WIDTH - 2 * PADDING, SCREEN_HEIGHT - 2 * PADDING)
+        pygame.draw.rect(screen, LIGHT_GRAY, inner_rect, border_radius=INNER_RADIUS)
         draw_slider(screen, knob_x)
 
         value = get_value(knob_x)
@@ -114,6 +116,10 @@ def run_num_gen_screen(screen):
             back_hover = back_button.collidepoint(mouse_pos)
 
             screen.fill(BASE)
+
+            inner_rect = pygame.Rect(PADDING, PADDING, SCREEN_WIDTH - 2 * PADDING, SCREEN_HEIGHT - 2 * PADDING)
+            pygame.draw.rect(screen, LIGHT_GRAY, inner_rect, border_radius=INNER_RADIUS)
+
             text = large_font.render(f"Number: {number}", True, GOLD)
             screen.blit(text, (SCREEN_WIDTH // 2 - text.get_width() // 2, SCREEN_HEIGHT // 2 - text.get_height() // 2))
 
