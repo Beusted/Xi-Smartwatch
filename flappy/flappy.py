@@ -32,6 +32,7 @@ start_image = pygame.image.load("flappy/assets/start.png")
 # Game
 scroll_speed = 1
 bird_start_position = (100, 160)
+score = 0 
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self):
@@ -151,6 +152,12 @@ def main():
 
         clock.tick(60)
         pygame.display.update()
+
+        # Show Score
+        score_text = font.render ('Score: ' + str(score), True, pygame.Color(255, 255, 255))
+        window.blit(score_text, (20, 20))
+        
+
 
 
 main()
