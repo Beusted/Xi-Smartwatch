@@ -153,12 +153,12 @@ def main():
         clock.tick(60)
         pygame.display.update()
 
-        global score
+    
+        
+
+    global score
         # Show Score
         score_text = font.render ('Score: ' + str(score), True, pygame.Color(255, 255, 255))
         window.blit(score_text, (20, 20))
-        
-
-
 
 main()
