@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 import random
+import os
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -34,6 +35,22 @@ start_image = pygame.image.load("flappy/assets/GoldenPonyStartHigher.png")
 scroll_speed = 1
 bird_start_position = (100, 160)
 score = 0
+# Functions to handle high score persistence
+def load_high_score():
+    if os.path.exists('high_score.txt'):
+        with open('high_score.txt', 'r') as file:
+            try:
+                return int(file.read())
+            except:
+                return 0
+    return 0
+
+def save_high_score(score):
+    with open('high_score.txt', 'w') as file:
+        file.write(str(score))
+
+# Initialize high score
+high_score = load_high_score()
 font = pygame.font.SysFont('Segoe', 26)
 game_stopped = True
 
@@ -117,7 +134,7 @@ def quit_game():
 
 # Game Main Method
 def main():
-    global score
+    global score, high_score
 
     # Instantiate Initial Ground
     x_pos_ground, y_pos_ground = 0, 520
@@ -133,6 +150,7 @@ def main():
     bird.add(Bird())
 
     run = True
+    game_over = False
     while run:
         # Quit game
         quit_game()
@@ -156,7 +174,7 @@ def main():
         bird.draw(screen)
         
         # Show Score
-        score_text = font.render ('Score: ' + str(score), True, pygame.Color(255, 255, 255))
+        score_text = font.render('Score: ' + str(score), True, pygame.Color(255, 255, 255))
         screen.blit(score_text, (20, 20))
         
         # Update - Pipes, Ground, and Bird
@@ -170,8 +188,27 @@ def main():
         collision_ground = pygame.sprite.spritecollide(bird.sprites()[0], ground, False)
         if collision_pipes or collision_ground:
             bird.sprite.alive = False
+            
+            # Update high score if current score is higher
+            if score > high_score:
+                high_score = score
+                save_high_score(high_score)
+                
+            # Display game over image
             screen.blit(game_over_image, (SCREEN_WIDTH // 2 - game_over_image.get_width() // 2, 
-                                              SCREEN_HEIGHT // 2 - game_over_image.get_height() // 2))
+                                          SCREEN_HEIGHT // 2 - game_over_image.get_height() // 2))
+            
+            # Display final score and high score
+            final_score_text = font.render(f'Final Score: {score}', True, WHITE)
+            high_score_text = font.render(f'High Score: {high_score}', True, WHITE)
+            
+            # Position the text below game over image
+            screen.blit(final_score_text, (SCREEN_WIDTH // 2 - final_score_text.get_width() // 2, 
+                                          SCREEN_HEIGHT // 2 + 20))
+            screen.blit(high_score_text, (SCREEN_WIDTH // 2 - high_score_text.get_width() // 2, 
+                                          SCREEN_HEIGHT // 2 + 50))
+            
+            # Restart on click
             if pygame.mouse.get_pressed()[0]:
                 score = 0
                 break
@@ -206,7 +243,7 @@ def menu():
         # Draw Menu pop up
         screen.fill((0, 0, 0))
         screen.blit(skyline_image, (0, 0))
-        screen.blit(ground_image, Ground(0, 520))
+        screen.blit(ground_image, (0, 520))
         screen.blit(bird_images[0], (100, 250))
         screen.blit(start_image, (SCREEN_WIDTH // 10 - start_image.get_width() // 10,
                                   SCREEN_WIDTH // 10 - start_image.get_height() // 10))
