@@ -8,10 +8,6 @@
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ---
@@ -37,13 +33,6 @@ The project embodies our passion for innovation and teamwork, overcoming challen
 - **Golden Pony:** Step counter and distance calculator to monitor your daily activity.
 - **Sleek & Modern Design:** Merges aesthetics with user-friendly functionality.
 
-
-  
----
-
-## License
-
-This project is open-source and available under the [MIT License](LICENSE).
 
 ---
 
