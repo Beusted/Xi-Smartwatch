@@ -21,7 +21,7 @@ BASE = (107, 106, 105)
 LIGHT_GRAY = (217, 217, 217)
 
 # Image Assets
-bird_images = [pygame.image.load("flappy/assets/bird_down.png"), pygame.image.load("flappy/assets/bird_mid.png"), pygame.image.load("flappy/assets/bird_up.png")]
+pony_images = [pygame.image.load("flappy/assets/pony_stretch.png"), pygame.image.load("flappy/assets/pony_mid.png"), pygame.image.load("flappy/assets/pony_close.png")]
 skyline_image = pygame.image.load("flappy/assets/background.png")
 ground_image = pygame.image.load("flappy/assets/ground.png")
 top_pipe_image = pygame.image.load("flappy/assets/pipe_top.png")
@@ -31,31 +31,31 @@ start_image = pygame.image.load("flappy/assets/start.png")
 
 # Game
 scroll_speed = 1
-bird_start_position = (100, 160)
+pony_start_position = (100, 160)
 score = 0 
 
-class Bird(pygame.sprite.Sprite):
+class Pony(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = bird_images[0]
+        self.image = pony_images[0]
         self.rect = self.image.get_rect()
-        self.rect.center = bird_start_position
+        self.rect.center = pony_start_position
         self.image_index = 0
         self.vel = 0
         self.flap = False
     
     def update(self):
-        # Bird Animation
+        # Pony Animation
         self.image_index += 1
         if self.image_index >= 30:
             self.image_index = 0
-        self.image = bird_images[self.image_index // 10]
+        self.image = pony_images[self.image_index // 10]
 
         # Gravity and Flap
         self.vel += 0.5
         if self.vel > 7:
             self.vel = 7
-        if self.rect.y < 500:
+        if self.rect.y < 320:
             self.rect.y += int(self.vel)
         if self.vel == 0:
             self.flap = False
@@ -73,11 +73,11 @@ class Pipe(pygame.sprite.Sprite):
         self.rect = self.image.get_rect() # manipulate position of img
         self.rect.x, self.rect.y = x, y # set xy coords of img = to the xy coords we pass in agrs
         
-        def update(self): # responsible for moving pipes from left to right side of screen
-            # move pipes
-            self.rect.x -= scroll_speed
-            if self.rect.x <= -SCREEN_WIDTH:
-                self.kill()
+    def update(self): # responsible for moving pipes from left to right side of screen
+        # move pipes
+        self.rect.x -= scroll_speed
+        if self.rect.x <= -SCREEN_WIDTH:
+            self.kill()
 
 class Ground(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -102,7 +102,7 @@ def quit_game():
 # Game Main Method
 def main():
     # Instantiate Initial Ground
-    x_pos_ground, y_pos_ground = 0, 520
+    x_pos_ground, y_pos_ground = 0, 280
     ground = pygame.sprite.Group()
     ground.add(Ground(x_pos_ground, y_pos_ground))
     
@@ -110,9 +110,9 @@ def main():
     pipe_timer = 0
     pipes = pygame.sprite.Group()
     
-    # Instantiate Bird
-    bird = pygame.sprite.GroupSingle()
-    bird.add(Bird())
+    # Instantiate Pony
+    pony = pygame.sprite.GroupSingle()
+    pony.add(Pony())
 
     run = True
     while run:
@@ -132,30 +132,30 @@ def main():
         # Spawn Pipes 
         if pipe_timer <= 0:
             x_top, x_bottom = 479, 479
-            y_top = random.randint(-400, -300)
-            gap = random.randint(90, 130)
+            y_top = random.randint(-800, -600)
+            gap = random.randint(100, 130)
             y_bottom = y_top + gap + bottom_pipe_image.get_height()
             pipes.add(Pipe(x_top, y_top, top_pipe_image))
             pipes.add(Pipe(x_bottom, y_bottom, bottom_pipe_image))
             pipe_timer = random.randint(180, 250)
         pipe_timer -= 1
         
-        # Draw - Pipes, Ground, and Bird
+        # Draw - Pipes, Ground, and Pony
         pipes.draw(screen)
         ground.draw(screen)
-        bird.draw(screen)
+        pony.draw(screen)
         
-        # Update - Pipes, Ground, and Bird
+        # Update - Pipes, Ground, and Pony
         pipes.update()
         ground.update()
-        bird.update()
+        pony.update()
 
         clock.tick(60)
         pygame.display.update()
 
     global score
-        # Show Score
-        score_text = font.render ('Score: ' + str(score), True, pygame.Color(255, 255, 255))
-        window.blit(score_text, (20, 20))
+    # Show Score
+    score_text = font.render ('Score: ' + str(score), True, pygame.Color(255, 255, 255))
+    window.blit(score_text, (20, 20))
 
 main()
