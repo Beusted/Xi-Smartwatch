@@ -9,7 +9,7 @@
 - [Overview](#overview)
 - [Features](#features)
 - [Contact](#contact)
-
+- [XI Class Roster](#XI Class Roster)
 ---
 
 ## Overview
@@ -30,7 +30,7 @@ The project embodies our passion for innovation and teamwork, overcoming challen
 - **Intuitive Touchscreen Interface:** Easy navigation across various applications.
 - **Timer & Stopwatch:** Reliable and versatile clock functionalities including a stopwatch and timer.
 - **Number Generator:** Random number generation perfect for games and decision-making.
-- **Golden Pony:** Step counter and distance calculator to monitor your daily activity.
+- **Golden Pony:** A game based on the game Flappy Birds but made into a Golden Pony
 - **Sleek & Modern Design:** Merges aesthetics with user-friendly functionality.
 
 
@@ -41,8 +41,30 @@ The project embodies our passion for innovation and teamwork, overcoming challen
 For questions, support, or further information, reach out via:
 
 - **Instagram:** [Theta Tau CSUF](https://www.instagram.com/csufthetatau/)
-- **Email:** _[your-email@example.com]_ (if available)
 
 ---
+
+## XI Class Roster
+
+Alexis 
+Ashley
+Bartolo
+Brian
+Daniel 
+Danny
+Derrick
+Gage
+Gia
+Jesus
+JLO
+Kaitlyn
+Lauren
+Matthew
+Noah
+Paige
+Sam
+Unice
+
+--
 
 *Made with dedication by the Xi Class of Theta Tau*
