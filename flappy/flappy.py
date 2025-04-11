@@ -1,5 +1,6 @@
 import pygame
 from sys import exit
+import random
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -62,7 +63,20 @@ class Bird(pygame.sprite.Sprite):
         if pygame.mouse.get_pressed()[0] and not self.flap and self.rect.y > 0:
             self.flap = True
             self.vel = -7
-
+            
+class Pipe(pygame.sprite.Sprite):
+    def __init__(self, x, y, image): # takes coordinates of pipe, image
+        pygame.sprite.Sprite.__init__(self) #initialize parent class
+        self.image = image # = to image we are passing in agrs
+        # conveinent for checking for collisions 
+        self.rect = self.image.get_rect() # manipulate position of img
+        self.rect.x, self.rect.y = x, y # set xy coords of img = to the xy coords we pass in agrs
+        
+        def update(self): # responsible for moving pipes from left to right side of screen
+            # move pipes
+            self.rect.x -= scroll_speed
+            if self.rect.x <= -SCREEN_WIDTH:
+                self.kill()
 
 class Ground(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -90,7 +104,11 @@ def main():
     x_pos_ground, y_pos_ground = 0, 520
     ground = pygame.sprite.Group()
     ground.add(Ground(x_pos_ground, y_pos_ground))
-
+    
+    # Pipes Setup
+    pipe_timer = 0
+    pipes = pygame.sprite.Group()
+    
     # Instantiate Bird
     bird = pygame.sprite.GroupSingle()
     bird.add(Bird())
@@ -109,12 +127,25 @@ def main():
         # Spawn Ground
         if len(ground) <= 2:
             ground.add(Ground(SCREEN_WIDTH, y_pos_ground))
-
+            
+        # Spawn Pipes 
+        if pipe_timer <= 0:
+            x_top, x_bottom = 479, 479
+            y_top = random.randint(-400, -300)
+            gap = random.randint(90, 130)
+            y_bottom = y_top + gap + bottom_pipe_image.get_height()
+            pipes.add(Pipe(x_top, y_top, top_pipe_image))
+            pipes.add(Pipe(x_bottom, y_bottom, bottom_pipe_image))
+            pipe_timer = random.randint(180, 250)
+        pipe_timer -= 1
+        
         # Draw - Pipes, Ground, and Bird
+        pipes.draw(screen)
         ground.draw(screen)
         bird.draw(screen)
-
+        
         # Update - Pipes, Ground, and Bird
+        pipes.update()
         ground.update()
         bird.update()
 
