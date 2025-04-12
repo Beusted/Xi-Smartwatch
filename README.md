@@ -50,24 +50,24 @@ For questions, support, or further information, reach out via:
 
 ## XI Class Roster
 
-- Alexis 
-- Ashley
-- Bartolo
-- Brian
-- Daniel 
-- Danny
-- Derrick
-- Gage
-- Gia
-- Jesus
-- JLO
-- Kaitlyn
-- Lauren
-- Matthew
-- Noah
-- Paige
-- Sam
-- Unice
+- Alexis Dessa
+- Ashley Villegas
+- Bartolo Mendez
+- Brian Ngo
+- Daniel Martinez
+- Danny Diaz
+- Derrick Luu
+- Gage Ashbaugh
+- Gianna Davila
+- Jesus Lopez (Jlo)
+- Jesus Moreno
+- Kaitlyn Lee
+- Lauren Chan
+- Matthew Cao-Manaka
+- Noah Cruz
+- Paige Saychareun
+- Sam Bernardo
+- Unice Cho
 
 ---
 
