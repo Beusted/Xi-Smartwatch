@@ -12,10 +12,12 @@ large_font = pygame.font.SysFont(None, 72)
 
 # Colors
 BLACK = (0, 0, 0)
-DARK_GRAY = (50, 50, 50)
-LIGHT_GRAY = (200, 200, 200)
-RED = (139, 0, 0)
-YELLOW = (255, 255, 0)
+GOLD = (194, 148, 83)
+RED = (161, 73, 67)
+WHITE = (255, 255, 255)
+DARK_GRAY = (30, 30, 30)
+BASE = (107, 106, 105)
+LIGHT_GRAY = (217, 217, 217)
 
 class Button:
     def __init__(self, rect, text):
@@ -24,7 +26,7 @@ class Button:
 
     def draw(self):
         pygame.draw.rect(screen, RED, self.rect, border_radius=8)
-        text_surface = font.render(self.text, True, YELLOW)
+        text_surface = font.render(self.text, True, GOLD)
         text_rect = text_surface.get_rect(center=self.rect.center)
         screen.blit(text_surface, text_rect)
 
@@ -82,7 +84,7 @@ def run_timer_app():
     clock = pygame.time.Clock()
 
     while True:
-        screen.fill(DARK_GRAY)
+        screen.fill(LIGHT_GRAY)
         layer_rect = pygame.Rect(10, 10, SCREEN_WIDTH - 20, SCREEN_HEIGHT - 20)
         pygame.draw.rect(screen, LIGHT_GRAY, layer_rect, border_radius=15)
 
@@ -180,7 +182,7 @@ def run_timer_app():
 
             # Draw the timer/stopwatch display.
             pygame.draw.rect(screen, RED, display_rect, border_radius=12)
-            time_surface = font_to_use.render(format_time(timer_display_value), True, YELLOW)
+            time_surface = font_to_use.render(format_time(timer_display_value), True, GOLD)
             time_rect = time_surface.get_rect(center=display_rect.center)
             screen.blit(time_surface, time_rect)
 
