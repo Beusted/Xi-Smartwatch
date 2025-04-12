@@ -7,7 +7,6 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Screen dimensions
-# actual: w: 480, h: 320 make sure we change it | Falsy play around: 720x551
 SCREEN_WIDTH = 480
 SCREEN_HEIGHT = 320
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -22,42 +21,50 @@ DARK_GRAY = (30, 30, 30)
 BASE = (107, 106, 105)
 LIGHT_GRAY = (217, 217, 217)
 
+# High score - THIS VALUE WILL BE MODIFIED BY THE GAME ITSELF
+# Do not change this value manually
+SAVED_HIGH_SCORE = 2
+
 # Image Assets
-bird_images = [pygame.image.load("flappy/assets/bird_down.png"), pygame.image.load("flappy/assets/bird_mid.png"), pygame.image.load("flappy/assets/bird_up.png")]
+pony_images = [pygame.image.load("flappy/assets/pony_stretch.png"), pygame.image.load("flappy/assets/pony_mid.png"), pygame.image.load("flappy/assets/pony_close.png")]
 skyline_image = pygame.image.load("flappy/assets/background.png")
 ground_image = pygame.image.load("flappy/assets/ground.png")
 top_pipe_image = pygame.image.load("flappy/assets/pipe_top.png")
 bottom_pipe_image = pygame.image.load("flappy/assets/pipe_bottom.png")
-game_over_image = pygame.image.load("flappy/assets/GameOver.png")
-start_image = pygame.image.load("flappy/assets/GoldenPonyStartHigher.png")
+game_over_image = pygame.image.load("flappy/assets/game_over.png")
+start_screen = pygame.image.load("flappy/assets/GoldenPonyStartHigher.png")
 
 # Game
 scroll_speed = 1
 bird_start_position = (100, 160)
 score = 0
-# Functions to handle high score persistence
-def load_high_score():
-    if os.path.exists('high_score.txt'):
-        with open('high_score.txt', 'r') as file:
-            try:
-                return int(file.read())
-            except:
-                return 0
-    return 0
-
-def save_high_score(score):
-    with open('high_score.txt', 'w') as file:
-        file.write(str(score))
-
-# Initialize high score
-high_score = load_high_score()
+high_score = SAVED_HIGH_SCORE
 font = pygame.font.SysFont('Segoe', 26)
 game_stopped = True
+
+# Function to update high score in this file
+def update_high_score_in_file(new_high_score):
+    # Get the path to the current script file
+    script_path = os.path.abspath(__file__)
+    
+    # Read the content of the current script
+    with open(script_path, 'r') as file:
+        lines = file.readlines()
+    
+    # Find the line with SAVED_HIGH_SCORE and replace it
+    for i, line in enumerate(lines):
+        if 'SAVED_HIGH_SCORE =' in line:
+            lines[i] = f"SAVED_HIGH_SCORE = {new_high_score}\n"
+            break
+    
+    # Write the modified content back to the script
+    with open(script_path, 'w') as file:
+        file.writelines(lines)
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = bird_images[0]
+        self.image = pony_images[0]
         self.rect = self.image.get_rect()
         self.rect.center = bird_start_position
         self.image_index = 0
@@ -70,7 +77,7 @@ class Bird(pygame.sprite.Sprite):
         self.image_index += 1
         if self.image_index >= 30:
             self.image_index = 0
-        self.image = bird_images[self.image_index // 10]
+        self.image = pony_images[self.image_index // 10]
 
         # Gravity and Flap
         self.vel += 0.5
@@ -150,7 +157,6 @@ def main():
     bird.add(Bird())
 
     run = True
-    game_over = False
     while run:
         # Quit game
         quit_game()
@@ -173,9 +179,11 @@ def main():
         ground.draw(screen)
         bird.draw(screen)
         
-        # Show Score
+        # Show Score and High Score
         score_text = font.render('Score: ' + str(score), True, pygame.Color(255, 255, 255))
+        high_score_text = font.render('High Score: ' + str(high_score), True, pygame.Color(255, 255, 255))
         screen.blit(score_text, (20, 20))
+        screen.blit(high_score_text, (20, 50))
         
         # Update - Pipes, Ground, and Bird
         if bird.sprite.alive:
@@ -192,23 +200,14 @@ def main():
             # Update high score if current score is higher
             if score > high_score:
                 high_score = score
-                save_high_score(high_score)
+                # Update the high score in the file itself
+                try:
+                    update_high_score_in_file(high_score)
+                except Exception as e:
+                    print(f"Could not update high score in file: {e}")
                 
-            # Display game over image
             screen.blit(game_over_image, (SCREEN_WIDTH // 2 - game_over_image.get_width() // 2, 
                                           SCREEN_HEIGHT // 2 - game_over_image.get_height() // 2))
-            
-            # Display final score and high score
-            final_score_text = font.render(f'Final Score: {score}', True, WHITE)
-            high_score_text = font.render(f'High Score: {high_score}', True, WHITE)
-            
-            # Position the text below game over image
-            screen.blit(final_score_text, (SCREEN_WIDTH // 2 - final_score_text.get_width() // 2, 
-                                          SCREEN_HEIGHT // 2 + 20))
-            screen.blit(high_score_text, (SCREEN_WIDTH // 2 - high_score_text.get_width() // 2, 
-                                          SCREEN_HEIGHT // 2 + 50))
-            
-            # Restart on click
             if pygame.mouse.get_pressed()[0]:
                 score = 0
                 break
@@ -243,10 +242,14 @@ def menu():
         # Draw Menu pop up
         screen.fill((0, 0, 0))
         screen.blit(skyline_image, (0, 0))
-        screen.blit(ground_image, (0, 520))
-        screen.blit(bird_images[0], (100, 250))
-        screen.blit(start_image, (SCREEN_WIDTH // 10 - start_image.get_width() // 10,
-                                  SCREEN_WIDTH // 10 - start_image.get_height() // 10))
+        screen.blit(ground_image, Ground(0, 520))
+        screen.blit(pony_images[0], (100, 250))
+        screen.blit(start_screen, (SCREEN_WIDTH // 10 - start_screen.get_width() // 10,
+                                  SCREEN_WIDTH // 10 - start_screen.get_height() // 10))
+        
+        # Show high score on menu screen
+        high_score_text = font.render('High Score: ' + str(high_score), True, pygame.Color(255, 255, 255))
+        screen.blit(high_score_text, (20, 20))
 
         pygame.display.update()
     main()
