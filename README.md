@@ -1,7 +1,11 @@
 # Xi-Smartwatch
 **Brought to you by the Xi Class of Theta Tau**
 
-[![Follow Theta Tau on Instagram](https://upload.wikimedia.org/wikipedia/en/d/d7/ThetaTau.png)](https://www.instagram.com/csufthetatau/)
+<p align="center">
+  <a href="https://www.instagram.com/csufthetatau/">
+    <img src="https://upload.wikimedia.org/wikipedia/en/d/d7/ThetaTau.png" alt="Follow Theta Tau on Instagram">
+  </a>
+</p>
 
 ---
 
@@ -9,7 +13,8 @@
 - [Overview](#overview)
 - [Features](#features)
 - [Contact](#contact)
-- [XI Class Roster](#XI Class Roster)
+- [XI Class Roster](#xi-class-roster)
+
 ---
 
 ## Overview
@@ -18,8 +23,8 @@
 
 The smartwatch hosts three primary apps:
 - **Timer & Stopwatch App:** Features a timer and stopwatch.
-- **Random Number Genertor:** Generates random numbers for a fun, casual experience.
-- **Golden Pony:** Is a game based on Flappy Birds but made into your class "The Golden Ponies"
+- **Random Number Generator:** Generates random numbers for a fun, casual experience.
+- **Golden Pony:** A game based on Flappy Birds but reimagined into your class "The Golden Ponies"
 
 The project embodies our passion for innovation and teamwork, overcoming challenges along the way to deliver this masterpiece.
 
@@ -30,9 +35,8 @@ The project embodies our passion for innovation and teamwork, overcoming challen
 - **Intuitive Touchscreen Interface:** Easy navigation across various applications.
 - **Timer & Stopwatch:** Reliable and versatile clock functionalities including a stopwatch and timer.
 - **Number Generator:** Random number generation perfect for games and decision-making.
-- **Golden Pony:** A game based on the game Flappy Birds but made into a Golden Pony
+- **Golden Pony:** A game inspired by Flappy Birds, featuring the Golden Ponies.
 - **Sleek & Modern Design:** Merges aesthetics with user-friendly functionality.
-
 
 ---
 
@@ -46,25 +50,25 @@ For questions, support, or further information, reach out via:
 
 ## XI Class Roster
 
-Alexis 
-Ashley
-Bartolo
-Brian
-Daniel 
-Danny
-Derrick
-Gage
-Gia
-Jesus
-JLO
-Kaitlyn
-Lauren
-Matthew
-Noah
-Paige
-Sam
-Unice
+- Alexis 
+- Ashley
+- Bartolo
+- Brian
+- Daniel 
+- Danny
+- Derrick
+- Gage
+- Gia
+- Jesus
+- JLO
+- Kaitlyn
+- Lauren
+- Matthew
+- Noah
+- Paige
+- Sam
+- Unice
 
---
+---
 
 *Made with dedication by the Xi Class of Theta Tau*
