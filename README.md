@@ -24,7 +24,7 @@
 The smartwatch hosts three primary apps:
 - **Timer & Stopwatch App:** Features a timer and stopwatch.
 - **Random Number Generator:** Generates random numbers for a fun, casual experience.
-- **Golden Pony:** A game based on Flappy Birds but reimagined into your class "The Golden Ponies"
+- **Golden Pony:** A game based on Flappy Birds but reimagined into our class "The Golden Ponies"
 
 The project embodies our passion for innovation and teamwork, overcoming challenges along the way to deliver this masterpiece.
 
