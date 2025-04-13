@@ -1,0 +1,203 @@
+import time
+import pygame
+import sys
+
+# Initialize pygame
+pygame.init()
+SCREEN_WIDTH, SCREEN_HEIGHT = 480, 320
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Timer & Stopwatch")
+font = pygame.font.SysFont(None, 32)
+large_font = pygame.font.SysFont(None, 72)
+
+# Colors
+BLACK = (0, 0, 0)
+DARK_GRAY = (50, 50, 50)
+LIGHT_GRAY = (200, 200, 200)
+RED = (139, 0, 0)
+YELLOW = (255, 255, 0)
+
+class Button:
+    def __init__(self, rect, text):
+        self.rect = pygame.Rect(rect)
+        self.text = text
+
+    def draw(self):
+        pygame.draw.rect(screen, RED, self.rect, border_radius=8)
+        text_surface = font.render(self.text, True, YELLOW)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        screen.blit(text_surface, text_rect)
+
+    def is_pressed(self, pos):
+        return self.rect.collidepoint(pos)
+
+def format_time(seconds):
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    secs = int(seconds % 60)
+    return f"{hours:02}:{minutes:02}:{secs:02}"
+
+def run_timer_app():
+    mode = None      # Can be "Timer" or "Stopwatch"
+    running = False  # Whether the stopwatch/timer is active
+    start_time = 0
+    elapsed = 0
+    timer_seconds = 0
+    timer_display_value = 0
+
+    # Two separate rectangles: one default for Timer and one centered for Stopwatch.
+    default_timer_display_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, 20, 200, 35)
+    center_timer_display_rect = pygame.Rect(SCREEN_WIDTH // 2 - 190, SCREEN_HEIGHT // 2 - 60, 380, 120)
+    timer_display_rect = default_timer_display_rect
+
+    # Mode selection buttons (displayed only on the start screen)
+    timer_btn = Button((SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 60, 200, 50), "Timer")
+    sw_btn = Button((SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 10, 200, 50), "Stopwatch")
+    
+    # Buttons for active modes (only visible after mode selection)
+    start_btn = Button((40, 260, 120, 40), "Start")
+    stop_btn = Button((180, 260, 120, 40), "Stop")
+    reset_btn = Button((320, 260, 120, 40), "Restart")
+
+    # Create buttons to adjust the timer (only used in Timer mode)
+    x_center = SCREEN_WIDTH // 2
+    y_start = 70
+    column_width = 100
+    row_height = 45
+
+    time_labels = [
+        ("+5h", "+5m", "+5s"),
+        ("+1h", "+1m", "+1s"),
+        ("-1h", "-1m", "-1s"),
+        ("-5h", "-5m", "-5s")
+    ]
+
+    time_buttons = []
+    for row_idx, row in enumerate(time_labels):
+        for col_idx, label in enumerate(row):
+            x = x_center + (col_idx - 1) * column_width - 35
+            y = y_start + row_idx * row_height
+            time_buttons.append(Button((x, y, 70, 40), label))
+
+    clock = pygame.time.Clock()
+
+    while True:
+        screen.fill(DARK_GRAY)
+        layer_rect = pygame.Rect(10, 10, SCREEN_WIDTH - 20, SCREEN_HEIGHT - 20)
+        pygame.draw.rect(screen, LIGHT_GRAY, layer_rect, border_radius=15)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = event.pos
+
+                if mode is None:
+                    # Start screen: Only allow selection of Timer or Stopwatch mode.
+                    if timer_btn.is_pressed(pos):
+                        mode = "Timer"
+                        timer_display_value = timer_seconds
+                        timer_display_rect = default_timer_display_rect
+                    elif sw_btn.is_pressed(pos):
+                        mode = "Stopwatch"
+                        elapsed = 0
+                        timer_display_value = 0
+                        running = False
+                        # For Stopwatch mode, always use the centered display.
+                        
+                elif reset_btn.is_pressed(pos):
+                    # Reset to the start screen
+                    mode = None
+                    running = False
+                    elapsed = 0
+                    timer_seconds = 0
+                    timer_display_value = 0
+                    timer_display_rect = default_timer_display_rect
+
+                elif start_btn.is_pressed(pos):
+                    if not running:
+                        start_time = time.time()
+                        running = True
+                        if mode == "Stopwatch":
+                            # Allow resuming from a paused value.
+                            start_time -= elapsed
+                        elif mode == "Timer":
+                            elapsed = 0
+                            # In Timer mode, once started, use the centered display.
+                            timer_display_rect = center_timer_display_rect
+
+                elif stop_btn.is_pressed(pos):
+                    if running:
+                        elapsed = time.time() - start_time
+                        running = False
+                        if mode == "Timer":
+                            timer_display_value = max(0, timer_seconds - elapsed)
+                            timer_display_rect = default_timer_display_rect
+                        elif mode == "Stopwatch":
+                            timer_display_value = elapsed
+
+                # Timer mode button controls (only available when mode is Timer and not running)
+                if mode == "Timer" and not running:
+                    for b in time_buttons:
+                        if b.is_pressed(pos):
+                            label = b.text
+                            val = int(label[1:-1])
+                            if label.startswith("+"):
+                                if "h" in label:
+                                    timer_seconds += val * 3600
+                                elif "m" in label:
+                                    timer_seconds += val * 60
+                                elif "s" in label:
+                                    timer_seconds += val
+                            elif label.startswith("-"):
+                                if "h" in label:
+                                    timer_seconds = max(0, timer_seconds - val * 3600)
+                                elif "m" in label:
+                                    timer_seconds = max(0, timer_seconds - val * 60)
+                                elif "s" in label:
+                                    timer_seconds = max(0, timer_seconds - val)
+                            timer_display_value = timer_seconds
+
+        # Update the timer/stopwatch value if running (only if a mode is selected)
+        if mode == "Timer":
+            if running:
+                elapsed = time.time() - start_time
+                timer_display_value = max(0, timer_seconds - elapsed)
+        elif mode == "Stopwatch":
+            if running:
+                timer_display_value = time.time() - start_time
+
+        # Draw UI elements only if a mode is selected.
+        if mode is not None:
+            # Choose display rectangle and font based on mode.
+            if mode == "Stopwatch":
+                display_rect = center_timer_display_rect
+                font_to_use = large_font
+            else:
+                display_rect = timer_display_rect
+                font_to_use = large_font if running else font
+
+            # Draw the timer/stopwatch display.
+            pygame.draw.rect(screen, RED, display_rect, border_radius=12)
+            time_surface = font_to_use.render(format_time(timer_display_value), True, YELLOW)
+            time_rect = time_surface.get_rect(center=display_rect.center)
+            screen.blit(time_surface, time_rect)
+
+            # Draw control buttons.
+            start_btn.draw()
+            stop_btn.draw()
+            reset_btn.draw()
+            if mode == "Timer" and not running:
+                for b in time_buttons:
+                    b.draw()
+        else:
+            # Start screen: Show only the mode selection buttons.
+            timer_btn.draw()
+            sw_btn.draw()
+
+        pygame.display.flip()
+        clock.tick(30)
+
+if __name__ == '__main__':
+    run_timer_app()
