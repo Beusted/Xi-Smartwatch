@@ -15,9 +15,12 @@
 - [Contact](#contact)
 - [XI Class Roster](#xi-class-roster)
 
----
-
 ## Overview
+Our two simple apps are a clock function that has a timer and stopwatch, and our second app
+is a random number generator.
+
+Our complex app is a "Flappy Bird" inspired mini-game which aims to boost focus, reflexes and coordination through quick, repeated game play.
+
 
 **Xi-Smartwatch** is a state-of-the-art touchscreen smartwatch designed to make everyday interactions simpler and more effective. Developed by the Xi Class of Theta Tau, this project brings you a blend of simplicity and cutting-edge functionality in one sleek device.
 

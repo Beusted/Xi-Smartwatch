@@ -18,7 +18,7 @@ BASE = (107, 106, 105)
 LIGHT_GRAY = (217, 217, 217)
 
 # Lists each app
-menu_items = ["Stopwatch", "Number Generator", "Fitness Tracker", "Clock"]
+menu_items = ["Stopwatch", "Number Generator", "Fitness Tracker"]
 item_height = 65
 spacing = 25
 visible_items = 3
