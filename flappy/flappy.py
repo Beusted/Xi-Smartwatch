@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 import random
+import os
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -31,7 +32,7 @@ ground_image = pygame.image.load("flappy/assets/ground.png")
 top_fence_image = pygame.image.load("flappy/assets/fence_top.png")
 bottom_fence_image = pygame.image.load("flappy/assets/fence_bottom.png")
 game_over_image = pygame.image.load("flappy/assets/game_over.png")
-start_image = pygame.image.load("flappy/assets/start.png")
+start_screen = pygame.image.load("flappy/assets/GoldenPonyStartHigher.png")
 
 # Game
 scroll_speed = 1
@@ -140,7 +141,7 @@ def quit_game():
 
 # Game Main Method
 def main():
-    global score
+    global score, high_score
 
     # Instantiate Initial Ground
     x_pos_ground, y_pos_ground = 0, 300
