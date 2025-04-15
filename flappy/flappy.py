@@ -1,13 +1,11 @@
 import pygame
 from sys import exit
 import random
-import os
 
 pygame.init()
 clock = pygame.time.Clock()
 
 # Screen dimensions
-# actual: w: 480, h: 320 make sure we change it | Falsy play around: 720x551
 SCREEN_WIDTH = 480
 SCREEN_HEIGHT = 320
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -33,7 +31,7 @@ ground_image = pygame.image.load("flappy/assets/ground.png")
 top_fence_image = pygame.image.load("flappy/assets/fence_top.png")
 bottom_fence_image = pygame.image.load("flappy/assets/fence_bottom.png")
 game_over_image = pygame.image.load("flappy/assets/game_over.png")
-start_screen = pygame.image.load("flappy/assets/GoldenPonyStartHigher.png")
+start_image = pygame.image.load("flappy/assets/start.png")
 
 # Game
 scroll_speed = 1
@@ -62,29 +60,29 @@ def update_high_score_in_file(new_high_score):
     with open(script_path, 'w') as file:
         file.writelines(lines)
 
-class Bird(pygame.sprite.Sprite):
+class Pony(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = bird_images[0]
+        self.image = pony_images[0]
         self.rect = self.image.get_rect()
-        self.rect.center = bird_start_position
+        self.rect.center = pony_start_position
         self.image_index = 0
         self.vel = 0
         self.flap = False
         self.alive = True
     
     def update(self):
-        # Bird Animation
+        # Pony Animation
         self.image_index += 1
         if self.image_index >= 30:
             self.image_index = 0
-        self.image = bird_images[self.image_index // 10]
+        self.image = pony_images[self.image_index // 10]
 
         # Gravity and Flap
         self.vel += 0.5
         if self.vel > 7:
             self.vel = 7
-        if self.rect.y < 500:
+        if self.rect.y < 320:
             self.rect.y += int(self.vel)
         if self.vel == 0:
             self.flap = False
@@ -142,7 +140,7 @@ def quit_game():
 
 # Game Main Method
 def main():
-    global score, high_score
+    global score
 
     # Instantiate Initial Ground
     x_pos_ground, y_pos_ground = 0, 300
@@ -153,9 +151,9 @@ def main():
     fence_timer = 0
     fences = pygame.sprite.Group()
     
-    # Instantiate Bird
-    bird = pygame.sprite.GroupSingle()
-    bird.add(Bird())
+    # Instantiate Pony
+    pony = pygame.sprite.GroupSingle()
+    pony.add(Pony())
 
     run = True
     while run:
@@ -211,6 +209,7 @@ def main():
             fences.add(Fence(x_bottom, y_bottom, bottom_fence_image, 'bottom'))
             fence_timer = random.randint(180, 250)
         fence_timer -= 1
+
         clock.tick(60)
         pygame.display.update()
 
@@ -238,6 +237,7 @@ def menu():
         # Show high score on menu screen
         high_score_text = score_font.render('High Score: ' + str(high_score), True, pygame.Color(255, 255, 255))
         screen.blit(high_score_text, (20, 20))
+
         pygame.display.update()
     main()
 
